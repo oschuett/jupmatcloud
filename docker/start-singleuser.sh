@@ -2,6 +2,8 @@
 
 #===============================================================================
 
+#TODO setup signal handler which shuts down posgresql and aiida.
+
 # setup postgresql
 PGBIN=/usr/lib/postgresql/9.5/bin
 if [ ! -d /project/.postgresql ]; then
@@ -13,9 +15,19 @@ if [ ! -d /project/.postgresql ]; then
    psql -h localhost -d template1 -c "CREATE DATABASE aiidadb OWNER aiida;"
    psql -h localhost -d template1 -c "GRANT ALL PRIVILEGES ON DATABASE aiidadb to aiida;"
 else
-   # TODO first stop database properly in case it crashed before?
-   ${PGBIN}/pg_ctl -D /project/.postgresql stop || true
+   # Postgresql was probably not shutdown properly. Cleaning up the mess...
+   echo "" > /project/.postgresql/logfile # empty log files
+   rm -vf /project/.postgresql/.s.PGSQL.5432
+   rm -vf /project/.postgresql/.s.PGSQL.5432.lock
+   rm -vf /project/.postgresql/postmaster.pid
+   #${PGBIN}/pg_ctl -D /project/.postgresql stop || true
    ${PGBIN}/pg_ctl -D /project/.postgresql -l /project/.postgresql/logfile start
+   TIMEOUT=20
+   until psql -h localhost template1 -c ";" || [ $TIMEOUT -eq 0 ]; do
+      echo ">>>>>>>>> Waiting for postgres server, $((TIMEOUT--)) remaining attempts..."
+      tail -n 50 /project/.postgresql/logfile
+      sleep 1
+   done
 fi
 
 
