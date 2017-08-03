@@ -128,7 +128,7 @@ ENTRYPOINT ["/opt/tini", "--"]
 
 #===============================================================================
 RUN mkdir /project                                                 && \
-    useradd --home /project --uid 1234 --shell /bin/bash scientist && \
+    useradd --home /project --uid 1000 --shell /bin/bash scientist && \
     chown -R scientist:scientist /project
 
 EXPOSE 8888
