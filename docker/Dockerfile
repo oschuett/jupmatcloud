@@ -1,3 +1,9 @@
+# Using ubuntu:latest to get recent versions of CP2K and QE.
+#
+# see also:
+# https://github.com/jupyter/docker-stacks/blob/master/base-notebook/Dockerfile
+# https://github.com/jupyter/docker-stacks/blob/master/scipy-notebook/Dockerfile
+#
 FROM ubuntu:latest
 
 USER root
@@ -5,6 +11,7 @@ USER root
 # install debian packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     locales               \
+    less                  \
     psmisc                \
     bzip2                 \
     build-essential       \
@@ -31,35 +38,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # fix locals
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
-
-
-# install PyPI packages for Pyhon 3
-RUN pip3 install --upgrade \
-    'pip'               \
-    'jupyter'           \
-    'jupyterhub'
-
-
-# install PyPI packages for Pyhon 2
-#IPython 6 requires Python 3.3 or later
-RUN pip2 install --upgrade \
-    'pip'               \
-    'ipython>=5,<6'     \
-    'ase'               \
-    'seekpath'          \
-    'aiida'             \
-    'pythreejs'         \
-    'nglview'           \
-    'bqplot'            \
-    'ipympl'
-
-
-# enable nbextension
-RUN jupyter nbextension enable  --sys-prefix --py widgetsnbextension && \
-    jupyter nbextension enable  --sys-prefix --py pythreejs          && \
-    jupyter nbextension enable  --sys-prefix --py nglview            && \
-    jupyter nbextension enable  --sys-prefix --py bqplot             && \
-    jupyter nbextension enable  --sys-prefix --py ipympl
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
 
 
 # Quantum-Espresso Pseudo Potentials
@@ -75,50 +56,83 @@ RUN for name in SSSP_acc_PBE SSSP_acc_PBESOL SSSP_eff_PBE SSSP_eff_PBESOL; do  \
 RUN rm -vf /opt/pseudos/SSSP_eff_PBE/Be_ONCV_PBE-1.0.upf
 
 
-# install Leopold's ASEtk
-RUN ASETK_VERSION=0.3-beta                                                  && \
-    cd /opt                                                                 && \
-    wget https://github.com/ltalirz/asetk/archive/v${ASETK_VERSION}.tar.gz  && \
-    tar -xvzf v${ASETK_VERSION}.tar.gz                                      && \
-    rm -v v${ASETK_VERSION}.tar.gz                                          && \
-    cd asetk-${ASETK_VERSION}                                               && \
-    cp -rv asetk/  /usr/local/lib/python2.7/dist-packages/                  && \
-    cp -rv scripts/* /usr/local/bin/
+## install PyPI packages for Pyhon 3
+RUN pip3 install           \
+    'jupyterhub'           \
+    'jupyter'
 
 
-# install aiida-cp2k
-WORKDIR /opt
-RUN git clone https://github.com/cp2k/aiida-cp2k.git && \
-    cp -rv ./aiida-cp2k/aiida_cp2k/calculations  /usr/local/lib/python2.7/dist-packages/aiida/orm/calculation/job/cp2k && \
-    cp -rv ./aiida-cp2k/aiida_cp2k/parsers       /usr/local/lib/python2.7/dist-packages/aiida/parsers/plugins/cp2k
+# install PyPI packages for Pyhon 2
+#IPython 6 requires Python 3.3 or later
+#   'seekpath'             \
+RUN pip2 install           \
+    'ipython>=5,<6'        \
+    'ase'                  \
+    'aiida'                \
+    'aiida-cp2k'           \
+    'bokeh'                \
+    'widgetsnbextension'   \
+    'pythreejs'            \
+    'nglview'              \
+    'ipympl'               \
+    'bqplot'
+
+# active ipython kernels
+RUN python2 -m ipykernel install
+RUN python3 -m ipykernel install
 
 
-# # install ipython-file-upload
-# # pip install fileupload # outdated
-WORKDIR /opt
-RUN git clone https://github.com/peteut/ipython-file-upload.git             && \
-    cd ipython-file-upload                                                  && \
-    pip2 install .                                                          && \
-    jupyter nbextension install --sys-prefix --py --symlink fileupload      && \
-    jupyter nbextension enable  --sys-prefix --py           fileupload
+# enable Jupyter NBextensions
+RUN jupyter nbextension enable  --sys-prefix --py widgetsnbextension && \
+    jupyter nbextension enable  --sys-prefix --py pythreejs          && \
+    jupyter nbextension enable  --sys-prefix --py nglview            && \
+    jupyter nbextension enable  --sys-prefix --py bqplot             && \
+    jupyter nbextension enable  --sys-prefix --py ipympl
 
 
-# install Jupyter Appmode
-WORKDIR /opt
-RUN git clone https://github.com/oschuett/jupyter_appmode.git  && \
-    ln -s /opt/jupyter_appmode/jupyter_appmode /usr/local/lib/python2.7/dist-packages/jupyter_appmode  && \
-    jupyter nbextension     install --sys-prefix --py --symlink jupyter_appmode  && \
-    jupyter nbextension     enable  --sys-prefix --py           jupyter_appmode  && \
-    jupyter serverextension enable  --sys-prefix --py           jupyter_appmode
+# # install Leopold's ASEtk
+# RUN ASETK_VERSION=0.3-beta                                                  && \
+#     cd /opt                                                                 && \
+#     wget https://github.com/ltalirz/asetk/archive/v${ASETK_VERSION}.tar.gz  && \
+#     tar -xvzf v${ASETK_VERSION}.tar.gz                                      && \
+#     rm -v v${ASETK_VERSION}.tar.gz                                          && \
+#     cd asetk-${ASETK_VERSION}                                               && \
+#     cp -rv asetk/  /usr/local/lib/python2.7/dist-packages/                  && \
+#     cp -rv scripts/* /usr/local/bin/
+#
+#
+#
+# # # install ipython-file-upload
+# # # pip install fileupload # outdated
+# WORKDIR /opt
+# RUN git clone https://github.com/peteut/ipython-file-upload.git             && \
+#     cd ipython-file-upload                                                  && \
+#     pip2 install .                                                          && \
+#     jupyter nbextension install --sys-prefix --py --symlink fileupload      && \
+#     jupyter nbextension enable  --sys-prefix --py           fileupload
+# 
+# 
+# # install Jupyter Appmode
+# WORKDIR /opt
+# RUN git clone https://github.com/oschuett/jupyter_appmode.git  && \
+#     ln -s /opt/jupyter_appmode/jupyter_appmode /usr/local/lib/python2.7/dist-packages/jupyter_appmode  && \
+#     jupyter nbextension     install --sys-prefix --py --symlink jupyter_appmode  && \
+#     jupyter nbextension     enable  --sys-prefix --py           jupyter_appmode  && \
+#     jupyter serverextension enable  --sys-prefix --py           jupyter_appmode
+#
+#
+# # install MolPad
+# WORKDIR /opt
+# RUN git clone https://github.com/oschuett/molview-ipywidget.git  && \
+#     ln -s /opt/molview-ipywidget/molview_ipywidget /usr/local/lib/python2.7/dist-packages/molview_ipywidget  && \
+#     jupyter nbextension     install --sys-prefix --py --symlink molview_ipywidget  && \
+#     jupyter nbextension     enable  --sys-prefix --py           molview_ipywidget
+#
+#
 
-
-# install MolPad
-WORKDIR /opt
-RUN git clone https://github.com/oschuett/molview-ipywidget.git  && \
-    ln -s /opt/molview-ipywidget/molview_ipywidget /usr/local/lib/python2.7/dist-packages/molview_ipywidget  && \
-    jupyter nbextension     install --sys-prefix --py --symlink molview_ipywidget  && \
-    jupyter nbextension     enable  --sys-prefix --py           molview_ipywidget
-
+# populate reentry cache
+# https://pypi.python.org/pypi/reentry/
+RUN reentry scan
 
 # install Tini
 WORKDIR /opt
