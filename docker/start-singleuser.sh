@@ -49,7 +49,7 @@ if [ ! -d /project/.aiida ]; then
       --repo /project/.aiida/repository \
       default
 
-   verdi profile setdefault verdi default 
+   verdi profile setdefault verdi default
    verdi profile setdefault daemon default
    bash -c 'echo -e "y\nsome.body@xyz.com" | verdi daemon configureuser'
 
@@ -88,6 +88,12 @@ if [ ! -e /project/.ssh/id_rsa ]; then
    ssh-keygen -f /project/.ssh/id_rsa -t rsa -N ''
 fi
 
+#===============================================================================
+# configure git
+if [ ! -e /project/.gitconfig ]; then
+  git config --global user.email "some.body@xyz.com"
+  git config --global user.name "Some Body"
+fi
 
 #===============================================================================
 # setup AiiDA jupyter extension
@@ -99,21 +105,34 @@ if [ ! -e /project/.ipython/profile_default/ipython_config.py ]; then
    echo "]"                                       >> /project/.ipython/profile_default/ipython_config.py
 fi
 
+#===============================================================================
+# install/upgrade apps
+if [ ! -e /project/apps ]; then
+   cd /project
+   git clone https://github.com/oschuett/jupmatcloud_apps apps
+else
+   cd /project/apps
+   git stash
+   git branch backup_`date +%s`
+   git fetch origin
+   git reset --hard origin/master
+fi
 
 #===============================================================================
 #start Jupyter notebook server
 export SHELL=/bin/bash
 
 cd /project
-jupyterhub-singleuser            \
-  --port=8888                    \
-  --ip=0.0.0.0                   \
-  --user=$JPY_USER               \
-  --cookie-name=$JPY_COOKIE_NAME \
-  --base-url=$JPY_BASE_URL       \
-  --hub-prefix=$JPY_HUB_PREFIX   \
-  --hub-api-url=$JPY_HUB_API_URL \
-  --notebook-dir="/project"
+jupyterhub-singleuser                                            \
+  --port=8888                                                    \
+  --ip=0.0.0.0                                                   \
+  --user=$JPY_USER                                               \
+  --cookie-name=$JPY_COOKIE_NAME                                 \
+  --base-url=$JPY_BASE_URL                                       \
+  --hub-prefix=$JPY_HUB_PREFIX                                   \
+  --hub-api-url=$JPY_HUB_API_URL                                 \
+  --notebook-dir="/project"                                      \
+  --NotebookApp.default_url="/apps/apps/start.ipynb"
 
 #===============================================================================
 

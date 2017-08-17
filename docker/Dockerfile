@@ -75,7 +75,8 @@ RUN pip2 install           \
     'pythreejs'            \
     'nglview'              \
     'ipympl'               \
-    'bqplot'
+    'bqplot'               \
+    'fileupload'
 
 # active ipython kernels
 RUN python2 -m ipykernel install
@@ -90,45 +91,36 @@ RUN jupyter nbextension enable  --sys-prefix --py widgetsnbextension && \
     jupyter nbextension enable  --sys-prefix --py ipympl
 
 
-# # install Leopold's ASEtk
-# RUN ASETK_VERSION=0.3-beta                                                  && \
-#     cd /opt                                                                 && \
-#     wget https://github.com/ltalirz/asetk/archive/v${ASETK_VERSION}.tar.gz  && \
-#     tar -xvzf v${ASETK_VERSION}.tar.gz                                      && \
-#     rm -v v${ASETK_VERSION}.tar.gz                                          && \
-#     cd asetk-${ASETK_VERSION}                                               && \
-#     cp -rv asetk/  /usr/local/lib/python2.7/dist-packages/                  && \
-#     cp -rv scripts/* /usr/local/bin/
-#
-#
-#
-# # # install ipython-file-upload
-# # # pip install fileupload # outdated
-# WORKDIR /opt
-# RUN git clone https://github.com/peteut/ipython-file-upload.git             && \
-#     cd ipython-file-upload                                                  && \
-#     pip2 install .                                                          && \
-#     jupyter nbextension install --sys-prefix --py --symlink fileupload      && \
-#     jupyter nbextension enable  --sys-prefix --py           fileupload
-# 
-# 
-# # install Jupyter Appmode
-# WORKDIR /opt
-# RUN git clone https://github.com/oschuett/jupyter_appmode.git  && \
-#     ln -s /opt/jupyter_appmode/jupyter_appmode /usr/local/lib/python2.7/dist-packages/jupyter_appmode  && \
-#     jupyter nbextension     install --sys-prefix --py --symlink jupyter_appmode  && \
-#     jupyter nbextension     enable  --sys-prefix --py           jupyter_appmode  && \
-#     jupyter serverextension enable  --sys-prefix --py           jupyter_appmode
-#
-#
-# # install MolPad
-# WORKDIR /opt
-# RUN git clone https://github.com/oschuett/molview-ipywidget.git  && \
-#     ln -s /opt/molview-ipywidget/molview_ipywidget /usr/local/lib/python2.7/dist-packages/molview_ipywidget  && \
-#     jupyter nbextension     install --sys-prefix --py --symlink molview_ipywidget  && \
-#     jupyter nbextension     enable  --sys-prefix --py           molview_ipywidget
-#
-#
+# install Leopold's ASEtk
+RUN ASETK_VERSION=0.3-beta                                                  && \
+    cd /opt                                                                 && \
+    wget https://github.com/ltalirz/asetk/archive/v${ASETK_VERSION}.tar.gz  && \
+    tar -xvzf v${ASETK_VERSION}.tar.gz                                      && \
+    rm -v v${ASETK_VERSION}.tar.gz                                          && \
+    cd asetk-${ASETK_VERSION}                                               && \
+    cp -rv asetk/  /usr/local/lib/python2.7/dist-packages/                  && \
+    cp -rv asetk/  /usr/local/lib/python3.5/dist-packages/                  && \
+    cp -rv scripts/* /usr/local/bin/
+
+
+# install Jupyter Appmode
+WORKDIR /opt
+RUN git clone https://github.com/oschuett/jupyter_appmode.git  &&     \
+    ln -s /opt/jupyter_appmode/jupyter_appmode /usr/local/lib/python2.7/dist-packages/jupyter_appmode  && \
+    ln -s /opt/jupyter_appmode/jupyter_appmode /usr/local/lib/python3.5/dist-packages/jupyter_appmode  && \
+    jupyter nbextension     install --sys-prefix --py --symlink jupyter_appmode  && \
+    jupyter nbextension     enable  --sys-prefix --py           jupyter_appmode  && \
+    jupyter serverextension enable  --sys-prefix --py           jupyter_appmode
+
+
+# install MolPad
+WORKDIR /opt
+RUN git clone https://github.com/oschuett/molview-ipywidget.git  && \
+    ln -s /opt/molview-ipywidget/molview_ipywidget /usr/local/lib/python2.7/dist-packages/molview_ipywidget  && \
+    ln -s /opt/molview-ipywidget/molview_ipywidget /usr/local/lib/python3.5/dist-packages/molview_ipywidget  && \
+    jupyter nbextension     install --sys-prefix --py --symlink molview_ipywidget  && \
+    jupyter nbextension     enable  --sys-prefix --py           molview_ipywidget
+
 
 # populate reentry cache
 # https://pypi.python.org/pypi/reentry/
