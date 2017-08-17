@@ -4,7 +4,7 @@
 # https://github.com/jupyter/docker-stacks/blob/master/base-notebook/Dockerfile
 # https://github.com/jupyter/docker-stacks/blob/master/scipy-notebook/Dockerfile
 #
-FROM ubuntu:latest
+FROM ubuntu:zesty
 
 USER root
 
@@ -57,7 +57,7 @@ RUN rm -vf /opt/pseudos/SSSP_eff_PBE/Be_ONCV_PBE-1.0.upf
 
 
 ## install PyPI packages for Pyhon 3
-RUN pip3 install           \
+RUN pip3 install --upgrade \
     'jupyterhub'           \
     'jupyter'
 
@@ -65,17 +65,17 @@ RUN pip3 install           \
 # install PyPI packages for Pyhon 2
 #IPython 6 requires Python 3.3 or later
 #   'seekpath'             \
-RUN pip2 install           \
-    'ipython>=5,<6'        \
-    'ase'                  \
-    'aiida'                \
-    'aiida-cp2k'           \
-    'bokeh'                \
-    'widgetsnbextension'   \
-    'pythreejs'            \
-    'nglview'              \
-    'ipympl'               \
-    'bqplot'               \
+RUN pip2 install                 \
+    'ipython>=5,<6'              \
+    'aiida'                      \
+    'aiida-cp2k'                 \
+    'ase'                        \
+    'bokeh'                      \
+    'widgetsnbextension'         \
+    'pythreejs'                  \
+    'nglview'                    \
+    'ipympl'                     \
+    'bqplot'                     \
     'fileupload'
 
 # active ipython kernels
@@ -88,7 +88,9 @@ RUN jupyter nbextension enable  --sys-prefix --py widgetsnbextension && \
     jupyter nbextension enable  --sys-prefix --py pythreejs          && \
     jupyter nbextension enable  --sys-prefix --py nglview            && \
     jupyter nbextension enable  --sys-prefix --py bqplot             && \
-    jupyter nbextension enable  --sys-prefix --py ipympl
+    jupyter nbextension enable  --sys-prefix --py ipympl             && \
+    jupyter nbextension install --sys-prefix --py fileupload         && \
+    jupyter nbextension enable  --sys-prefix --py fileupload
 
 
 # install Leopold's ASEtk
@@ -125,6 +127,10 @@ RUN git clone https://github.com/oschuett/molview-ipywidget.git  && \
 # populate reentry cache
 # https://pypi.python.org/pypi/reentry/
 RUN reentry scan
+
+# disable MPI warnings that confuse ASE
+# https://www.mail-archive.com/users@lists.open-mpi.org/msg30611.html
+RUN echo "btl_base_warn_component_unused = 0" >> /etc/openmpi/openmpi-mca-params.conf
 
 # install Tini
 WORKDIR /opt

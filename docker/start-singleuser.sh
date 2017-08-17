@@ -5,7 +5,7 @@
 #TODO setup signal handler which shuts down posgresql and aiida.
 
 # setup postgresql
-PGBIN=/usr/lib/postgresql/9.5/bin
+PGBIN=/usr/lib/postgresql/9.6/bin
 if [ ! -d /project/.postgresql ]; then
    mkdir /project/.postgresql
    ${PGBIN}/initdb -D /project/.postgresql
@@ -77,7 +77,7 @@ fi
 if [ ! -e /project/.bashrc ]; then
    cp -v /etc/skel/.bashrc /etc/skel/.bash_logout /etc/skel/.profile /project/
    echo 'eval "$(verdi completioncommand)"' >> /project/.bashrc
-   echo 'export PYTHONPATH="${PYTHONPATH}:/project"' >> /project/.bashrc
+   echo 'export PYTHONPATH="/project"' >> /project/.bashrc
 fi
 
 
@@ -121,6 +121,7 @@ fi
 #===============================================================================
 #start Jupyter notebook server
 export SHELL=/bin/bash
+export PYTHONPATH=/project
 
 cd /project
 jupyterhub-singleuser                                            \
@@ -132,6 +133,7 @@ jupyterhub-singleuser                                            \
   --hub-prefix=$JPY_HUB_PREFIX                                   \
   --hub-api-url=$JPY_HUB_API_URL                                 \
   --notebook-dir="/project"                                      \
+  --NotebookApp.iopub_data_rate_limit=1000000000                 \
   --NotebookApp.default_url="/apps/apps/start.ipynb"
 
 #===============================================================================
