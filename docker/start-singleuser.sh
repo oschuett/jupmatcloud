@@ -30,6 +30,10 @@ else
    done
 fi
 
+#===============================================================================
+# environment
+export PYTHONPATH=/project
+export SHELL=/bin/bash
 
 #===============================================================================
 # setup AiiDA
@@ -120,8 +124,6 @@ fi
 
 #===============================================================================
 #start Jupyter notebook server
-export SHELL=/bin/bash
-export PYTHONPATH=/project
 
 cd /project
 jupyterhub-singleuser                                            \
