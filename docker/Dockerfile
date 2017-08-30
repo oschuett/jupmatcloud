@@ -70,6 +70,7 @@ RUN pip2 install                 \
     'aiida'                      \
     'aiida-cp2k'                 \
     'ase'                        \
+    'GridDataFormats'            \
     'bokeh'                      \
     'widgetsnbextension'         \
     'pythreejs'                  \
@@ -107,7 +108,7 @@ RUN ASETK_VERSION=0.3-beta                                                  && \
 
 # install Jupyter Appmode
 WORKDIR /opt
-RUN git clone https://github.com/oschuett/jupyter_appmode.git  &&     \
+RUN git clone https://github.com/oschuett/jupyter_appmode.git  &&      \
     ln -s /opt/jupyter_appmode/jupyter_appmode /usr/local/lib/python2.7/dist-packages/jupyter_appmode  && \
     ln -s /opt/jupyter_appmode/jupyter_appmode /usr/local/lib/python3.5/dist-packages/jupyter_appmode  && \
     jupyter nbextension     install --sys-prefix --py --symlink jupyter_appmode  && \
