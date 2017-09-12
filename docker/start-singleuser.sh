@@ -1,7 +1,10 @@
 #!/bin/bash -e
 
 #===============================================================================
+# debuging
+set -x
 
+#===============================================================================
 #TODO setup signal handler which shuts down posgresql and aiida.
 
 # setup postgresql
@@ -127,13 +130,8 @@ fi
 
 cd /project
 jupyterhub-singleuser                                            \
-  --port=8888                                                    \
   --ip=0.0.0.0                                                   \
-  --user=$JPY_USER                                               \
-  --cookie-name=$JPY_COOKIE_NAME                                 \
-  --base-url=$JPY_BASE_URL                                       \
-  --hub-prefix=$JPY_HUB_PREFIX                                   \
-  --hub-api-url=$JPY_HUB_API_URL                                 \
+  --port=8888                                                    \
   --notebook-dir="/project"                                      \
   --NotebookApp.iopub_data_rate_limit=1000000000                 \
   --NotebookApp.default_url="/apps/apps/start.ipynb"

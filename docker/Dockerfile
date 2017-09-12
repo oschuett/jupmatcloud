@@ -55,22 +55,20 @@ RUN for name in SSSP_acc_PBE SSSP_acc_PBESOL SSSP_eff_PBE SSSP_eff_PBESOL; do  \
 # remove misplaced pseudo
 RUN rm -vf /opt/pseudos/SSSP_eff_PBE/Be_ONCV_PBE-1.0.upf
 
-
 ## install PyPI packages for Pyhon 3
-RUN pip3 install --upgrade \
-    'jupyterhub'           \
-    'jupyter'
+RUN pip3 install --upgrade         \
+    'jupyterhub==0.8.0b5'          \
+    'notebook'
 
 
 # install PyPI packages for Pyhon 2
 #IPython 6 requires Python 3.3 or later
-#   'seekpath'             \
 RUN pip2 install                 \
     'ipython>=5,<6'              \
     'aiida'                      \
     'aiida-cp2k'                 \
     'ase'                        \
-    'GridDataFormats'            \
+    'seekpath'                   \
     'bokeh'                      \
     'widgetsnbextension'         \
     'pythreejs'                  \
