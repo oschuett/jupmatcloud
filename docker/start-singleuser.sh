@@ -9,11 +9,23 @@ set -x
 
 # setup postgresql
 PGBIN=/usr/lib/postgresql/9.6/bin
+
+# helper function to start psql and wait for it
+function start_psql {
+   ${PGBIN}/pg_ctl -D /project/.postgresql -l /project/.postgresql/logfile start
+   TIMEOUT=20
+   until psql -h localhost template1 -c ";" || [ $TIMEOUT -eq 0 ]; do
+      echo ">>>>>>>>> Waiting for postgres server, $((TIMEOUT--)) remaining attempts..."
+      tail -n 50 /project/.postgresql/logfile
+      sleep 1
+   done
+}
+
 if [ ! -d /project/.postgresql ]; then
    mkdir /project/.postgresql
    ${PGBIN}/initdb -D /project/.postgresql
    echo "unix_socket_directories = '/project/.postgresql'" >> /project/.postgresql/postgresql.conf
-   ${PGBIN}/pg_ctl -D /project/.postgresql -l /project/.postgresql/logfile start
+   start_psql
    psql -h localhost -d template1 -c "CREATE USER aiida WITH PASSWORD 'aiida_db_passwd';"
    psql -h localhost -d template1 -c "CREATE DATABASE aiidadb OWNER aiida;"
    psql -h localhost -d template1 -c "GRANT ALL PRIVILEGES ON DATABASE aiidadb to aiida;"
@@ -24,13 +36,7 @@ else
    rm -vf /project/.postgresql/.s.PGSQL.5432.lock
    rm -vf /project/.postgresql/postmaster.pid
    #${PGBIN}/pg_ctl -D /project/.postgresql stop || true
-   ${PGBIN}/pg_ctl -D /project/.postgresql -l /project/.postgresql/logfile start
-   TIMEOUT=20
-   until psql -h localhost template1 -c ";" || [ $TIMEOUT -eq 0 ]; do
-      echo ">>>>>>>>> Waiting for postgres server, $((TIMEOUT--)) remaining attempts..."
-      tail -n 50 /project/.postgresql/logfile
-      sleep 1
-   done
+   start_psql
 fi
 
 #===============================================================================
