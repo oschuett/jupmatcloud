@@ -57,25 +57,13 @@ RUN rm -vf /opt/pseudos/SSSP_eff_PBE/Be_ONCV_PBE-1.0.upf
 
 ## install PyPI packages for Pyhon 3
 RUN pip3 install --upgrade         \
-    'jupyterhub==0.8.0b5'          \
+    'jupyterhub'                   \
     'notebook'
 
-
-# install PyPI packages for Pyhon 2
-#IPython 6 requires Python 3.3 or later
-RUN pip2 install                 \
-    'ipython>=5,<6'              \
-    'aiida'                      \
-    'aiida-cp2k'                 \
-    'ase'                        \
-    'seekpath'                   \
-    'bokeh'                      \
-    'widgetsnbextension'         \
-    'pythreejs'                  \
-    'nglview'                    \
-    'ipympl'                     \
-    'bqplot'                     \
-    'fileupload'
+## install PyPI packages for Pyhon 2.
+## Using pip freeze to keep user visible software stack stable.
+COPY requirements.txt /opt/
+RUN pip2 install -r /opt/requirements.txt
 
 # active ipython kernels
 RUN python2 -m ipykernel install
@@ -122,6 +110,9 @@ RUN git clone https://github.com/oschuett/molview-ipywidget.git  && \
     jupyter nbextension     install --sys-prefix --py --symlink molview_ipywidget  && \
     jupyter nbextension     enable  --sys-prefix --py           molview_ipywidget
 
+# patch AiiDA
+COPY job_process.py.patch /opt/
+RUN patch  -R /usr/local/lib/python2.7/dist-packages/aiida/work/legacy/job_process.py job_process.py.patch
 
 # populate reentry cache
 # https://pypi.python.org/pypi/reentry/
@@ -139,7 +130,7 @@ ENTRYPOINT ["/opt/tini", "--"]
 
 #===============================================================================
 RUN mkdir /project                                                 && \
-    useradd --home /project --uid 1000 --shell /bin/bash scientist && \
+    useradd --home /project --uid 1234 --shell /bin/bash scientist && \
     chown -R scientist:scientist /project
 
 EXPOSE 8888
