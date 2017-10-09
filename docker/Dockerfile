@@ -57,8 +57,8 @@ RUN rm -vf /opt/pseudos/SSSP_eff_PBE/Be_ONCV_PBE-1.0.upf
 
 ## install PyPI packages for Pyhon 3
 RUN pip3 install --upgrade         \
-    'jupyterhub'                   \
-    'notebook'
+    'jupyterhub==0.8.0'            \
+    'notebook==5.0.0'
 
 ## install PyPI packages for Pyhon 2.
 ## Using pip freeze to keep user visible software stack stable.
