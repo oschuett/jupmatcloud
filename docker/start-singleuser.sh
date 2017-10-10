@@ -59,7 +59,7 @@ if [ ! -d /project/.aiida ]; then
       --db_name aiidadb                 \
       --db_host localhost               \
       --db_port 5432                    \
-      --repo /project/.aiida/repository \
+      --repo /project/aiida_repository \
       default
 
    verdi profile setdefault verdi default
