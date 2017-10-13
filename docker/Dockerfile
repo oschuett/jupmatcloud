@@ -80,6 +80,13 @@ RUN jupyter nbextension enable  --sys-prefix --py widgetsnbextension && \
     jupyter nbextension enable  --sys-prefix --py fileupload
 
 
+# install Jupyter Appmode
+# server runs python3, notebook runs python2 - need both
+RUN pip2 install appmode==0.0.2                                      && \
+    pip3 install appmode==0.0.2                                      && \
+    jupyter nbextension     enable --sys-prefix --py appmode         && \
+    jupyter serverextension enable --sys-prefix --py appmode
+
 # install Leopold's ASEtk
 RUN ASETK_VERSION=0.3-beta                                                  && \
     cd /opt                                                                 && \
@@ -90,17 +97,6 @@ RUN ASETK_VERSION=0.3-beta                                                  && \
     cp -rv asetk/  /usr/local/lib/python2.7/dist-packages/                  && \
     cp -rv asetk/  /usr/local/lib/python3.5/dist-packages/                  && \
     cp -rv scripts/* /usr/local/bin/
-
-
-# install Jupyter Appmode
-WORKDIR /opt
-RUN git clone https://github.com/oschuett/jupyter_appmode.git  &&      \
-    ln -s /opt/jupyter_appmode/jupyter_appmode /usr/local/lib/python2.7/dist-packages/jupyter_appmode  && \
-    ln -s /opt/jupyter_appmode/jupyter_appmode /usr/local/lib/python3.5/dist-packages/jupyter_appmode  && \
-    jupyter nbextension     install --sys-prefix --py --symlink jupyter_appmode  && \
-    jupyter nbextension     enable  --sys-prefix --py           jupyter_appmode  && \
-    jupyter serverextension enable  --sys-prefix --py           jupyter_appmode
-
 
 # install MolPad
 WORKDIR /opt
