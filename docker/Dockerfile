@@ -58,7 +58,7 @@ RUN rm -vf /opt/pseudos/SSSP_eff_PBE/Be_ONCV_PBE-1.0.upf
 ## install PyPI packages for Pyhon 3
 RUN pip3 install --upgrade         \
     'jupyterhub==0.8.0'            \
-    'notebook==5.0.0'
+    'notebook==5.1.0'
 
 ## install PyPI packages for Pyhon 2.
 ## Using pip freeze to keep user visible software stack stable.
@@ -82,8 +82,8 @@ RUN jupyter nbextension enable  --sys-prefix --py widgetsnbextension && \
 
 # install Jupyter Appmode
 # server runs python3, notebook runs python2 - need both
-RUN pip2 install appmode==0.0.2                                      && \
-    pip3 install appmode==0.0.2                                      && \
+RUN pip2 install appmode==0.0.5                                      && \
+    pip3 install appmode==0.0.5                                      && \
     jupyter nbextension     enable --sys-prefix --py appmode         && \
     jupyter serverextension enable --sys-prefix --py appmode
 
