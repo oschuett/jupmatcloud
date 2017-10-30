@@ -135,7 +135,8 @@ fi
 #start Jupyter notebook server
 
 cd /project
-jupyterhub-singleuser                                            \
+#jupyterhub-singleuser                                            \
+/opt/matcloud-jupyterhub-singleuser                              \
   --ip=0.0.0.0                                                   \
   --port=8888                                                    \
   --notebook-dir="/project"                                      \

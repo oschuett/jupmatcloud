@@ -82,8 +82,8 @@ RUN jupyter nbextension enable  --sys-prefix --py widgetsnbextension && \
 
 # install Jupyter Appmode
 # server runs python3, notebook runs python2 - need both
-RUN pip2 install appmode==0.0.6                                      && \
-    pip3 install appmode==0.0.6                                      && \
+RUN pip2 install appmode==0.0.7                                      && \
+    pip3 install appmode==0.0.7                                      && \
     jupyter nbextension     enable --sys-prefix --py appmode         && \
     jupyter serverextension enable --sys-prefix --py appmode
 
@@ -132,6 +132,7 @@ RUN mkdir /project                                                 && \
 EXPOSE 8888
 USER scientist
 COPY start-singleuser.sh /opt/
+COPY matcloud-jupyterhub-singleuser /opt/
 WORKDIR /project
 CMD ["/opt/start-singleuser.sh"]
 
