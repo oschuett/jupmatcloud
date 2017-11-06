@@ -109,6 +109,7 @@ RUN git clone https://github.com/oschuett/molview-ipywidget.git  && \
 # patch AiiDA
 COPY job_process.py.patch /opt/
 RUN patch  -R /usr/local/lib/python2.7/dist-packages/aiida/work/legacy/job_process.py job_process.py.patch
+RUN cd /usr/local/lib/python2.7/dist-packages/aiida/workflows; rm -rf user; ln -s /project/workflows user
 
 # populate reentry cache
 # https://pypi.python.org/pypi/reentry/

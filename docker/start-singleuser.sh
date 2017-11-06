@@ -67,8 +67,8 @@ if [ ! -d /project/.aiida ]; then
    bash -c 'echo -e "y\nsome.body@xyz.com" | verdi daemon configureuser'
 
    # increase logging level
-   verdi devel setproperty logging.celery_loglevel DEBUG
-   verdi devel setproperty logging.aiida_loglevel DEBUG
+   #verdi devel setproperty logging.celery_loglevel DEBUG
+   #verdi devel setproperty logging.aiida_loglevel DEBUG
 
    # start the daemon
    verdi daemon start
