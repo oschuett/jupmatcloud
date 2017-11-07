@@ -123,12 +123,6 @@ fi
 if [ ! -e /project/apps ]; then
    cd /project
    git clone https://github.com/oschuett/jupmatcloud_apps apps
-else
-   cd /project/apps
-   git stash
-   git branch backup_`date +%s`
-   git fetch origin
-   git reset --hard origin/master
 fi
 
 #===============================================================================
