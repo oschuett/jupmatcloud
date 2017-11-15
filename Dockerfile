@@ -33,6 +33,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates       \
     vim                   \
     ssh                   \
+    file                  \
+    zip                   \
+    unzip                 \
   && rm -rf /var/lib/apt/lists/*
 
 
@@ -65,12 +68,13 @@ RUN pip3 install --upgrade         \
 COPY requirements.txt /opt/
 RUN pip2 install -r /opt/requirements.txt
 
+
 # active ipython kernels
 RUN python2 -m ipykernel install
 RUN python3 -m ipykernel install
 
 
-# enable Jupyter NBextensions
+# enable Jupyter extensions
 RUN jupyter nbextension enable  --sys-prefix --py widgetsnbextension && \
     jupyter nbextension enable  --sys-prefix --py pythreejs          && \
     jupyter nbextension enable  --sys-prefix --py nglview            && \
@@ -82,21 +86,11 @@ RUN jupyter nbextension enable  --sys-prefix --py widgetsnbextension && \
 
 # install Jupyter Appmode
 # server runs python3, notebook runs python2 - need both
-RUN pip2 install appmode==0.0.7                                      && \
-    pip3 install appmode==0.0.7                                      && \
-    jupyter nbextension     enable --sys-prefix --py appmode         && \
-    jupyter serverextension enable --sys-prefix --py appmode
+RUN pip2 install appmode==0.1.0                                          && \
+    pip3 install appmode==0.1.0                                          && \
+    jupyter nbextension     enable  --sys-prefix --py appmode            && \
+    jupyter serverextension enable  --sys-prefix --py appmode
 
-# install Leopold's ASEtk
-RUN ASETK_VERSION=0.3-beta                                                  && \
-    cd /opt                                                                 && \
-    wget https://github.com/ltalirz/asetk/archive/v${ASETK_VERSION}.tar.gz  && \
-    tar -xvzf v${ASETK_VERSION}.tar.gz                                      && \
-    rm -v v${ASETK_VERSION}.tar.gz                                          && \
-    cd asetk-${ASETK_VERSION}                                               && \
-    cp -rv asetk/  /usr/local/lib/python2.7/dist-packages/                  && \
-    cp -rv asetk/  /usr/local/lib/python3.5/dist-packages/                  && \
-    cp -rv scripts/* /usr/local/bin/
 
 # install MolPad
 WORKDIR /opt

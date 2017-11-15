@@ -1,34 +1,36 @@
-# # install PyPI packages for Pyhon 2
-# #IPython 6 requires Python 3.3 or later
-# RUN pip2 install                 \
-#     'ipython>=5,<6'              \
-#     'aiida'                      \
-#     'aiida-cp2k'                 \
-#     'ase'                        \
-#     'seekpath'                   \
-#     'bokeh'                      \
-#     'widgetsnbextension'         \
-#     'pythreejs'                  \
-#     'nglview'                    \
-#     'ipympl'                     \
-#     'bqplot'                     \
-#     'fileupload'                 \
-#     'requests'
-#===============================================================================
+#
+# main packages ================================================================
+#
+ipython==5.4.1  # IPython 6 requires Python 3.3 or later
+notebook==5.1.0
 aiida==0.9.1
-aiida-core==0.9.1
 aiida-cp2k==0.5
+ase==3.14.1
+seekpath==1.5.0
+ipywidgets==7.0.0
+fileupload==0.1.5
+bokeh==0.12.9
+pythreejs==0.3.1
+nglview==0.6.5
+bqplot==0.9.0
+matplotlib==2.0.2
+ipympl==0.0.5
+numpy==1.13.1
+pandas==0.20.3
+scipy==0.19.1
+requests==2.18.4
+lxml==4.1.0
+#
+# dependencies =================================================================
+#
 aldjemy==0.6.0
 amqp==1.4.9
 anyjson==0.3.3
-ase==3.14.1
 asn1crypto==0.22.0
 backports-abc==0.5
 backports.shutil-get-terminal-size==1.0.0
 billiard==3.3.0.23
 bleach==2.0.0
-bokeh==0.12.9
-bqplot==0.9.0
 celery==3.1.25
 certifi==2017.7.27.1
 cffi==1.10.0
@@ -44,7 +46,6 @@ ecdsa==0.13
 entrypoints==0.2.3
 enum34==1.1.6
 ete3==3.0.0b35
-fileupload==0.1.5
 Flask==0.12.2
 frozendict==1.2
 functools32==3.2.3.post2
@@ -54,10 +55,8 @@ html5lib==0.999999999
 idna==2.6
 ipaddress==1.0.18
 ipykernel==4.6.1
-ipympl==0.0.5
 ipython==5.4.1
 ipython-genutils==0.2.0
-ipywidgets==7.0.0
 itsdangerous==0.24
 Jinja2==2.9.6
 jsonschema==2.6.0
@@ -65,16 +64,10 @@ jupyter-client==5.1.0
 jupyter-core==4.3.0
 kombu==3.0.37
 MarkupSafe==1.0
-matplotlib==2.0.2
 meld3==1.0.0
 mistune==0.7.4
 nbconvert==5.3.1
 nbformat==4.4.0
-nglview==0.6.5
-notebook==5.1.0
-numpy==1.13.1
-pandas==0.20.3
-pandocfilters==1.4.2
 paramiko==2.1.2
 passlib==1.7.1
 pathlib2==2.3.0
@@ -92,15 +85,11 @@ Pygments==2.2.0
 pyparsing==2.2.0
 python-dateutil==2.6.1
 python-mimeparse==0.1.4
-pythreejs==0.3.1
 pytz==2014.10
 PyYAML==3.12
 pyzmq==16.0.2
 reentry==1.0.2
-requests==2.18.4
 scandir==1.5
-scipy==0.19.1
-seekpath==1.5.0
 simplegeneric==0.8.1
 singledispatch==3.4.0.3
 six==1.10.0
@@ -125,4 +114,4 @@ wcwidth==0.1.7
 webencodings==0.5.1
 Werkzeug==0.12.2
 widgetsnbextension==3.0.2
-lxml==4.1.0
+#EOF

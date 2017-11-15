@@ -101,12 +101,6 @@ if [ ! -e /project/.ssh/id_rsa ]; then
    ssh-keygen -f /project/.ssh/id_rsa -t rsa -N ''
 fi
 
-#===============================================================================
-# configure git
-if [ ! -e /project/.gitconfig ]; then
-  git config --global user.email "some.body@xyz.com"
-  git config --global user.name "Some Body"
-fi
 
 #===============================================================================
 # setup AiiDA jupyter extension
@@ -121,21 +115,20 @@ fi
 #===============================================================================
 # install/upgrade apps
 if [ ! -e /project/apps ]; then
-   cd /project
-   git clone https://github.com/oschuett/jupmatcloud_apps apps
+   mkdir /project/apps
+   touch /project/apps/__init__.py
+   git clone https://github.com/materialscloud-org/mc-appmanager /project/apps/appmanager
 fi
 
 #===============================================================================
 #start Jupyter notebook server
-
 cd /project
-#jupyterhub-singleuser                                            \
 /opt/matcloud-jupyterhub-singleuser                              \
   --ip=0.0.0.0                                                   \
   --port=8888                                                    \
   --notebook-dir="/project"                                      \
   --NotebookApp.iopub_data_rate_limit=1000000000                 \
-  --NotebookApp.default_url="/apps/apps/start.ipynb"
+  --NotebookApp.default_url="/apps/apps/appmanager/start.ipynb"
 
 #===============================================================================
 
