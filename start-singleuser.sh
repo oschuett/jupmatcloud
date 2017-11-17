@@ -117,8 +117,7 @@ fi
 if [ ! -e /project/apps ]; then
    mkdir /project/apps
    touch /project/apps/__init__.py
-   git clone https://github.com/materialscloud-org/mc-appmanager /project/apps/appmanager
-   git clone https://github.com/materialscloud-org/mc-base       /project/apps/base
+   git clone https://github.com/materialscloud-org/mc-home /project/apps/home
 fi
 
 #===============================================================================
