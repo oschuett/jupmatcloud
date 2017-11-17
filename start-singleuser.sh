@@ -128,7 +128,7 @@ cd /project
   --port=8888                                                    \
   --notebook-dir="/project"                                      \
   --NotebookApp.iopub_data_rate_limit=1000000000                 \
-  --NotebookApp.default_url="/apps/apps/appmanager/start.ipynb"
+  --NotebookApp.default_url="/apps/apps/home/start.ipynb"
 
 #===============================================================================
 
