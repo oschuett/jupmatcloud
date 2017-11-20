@@ -36,6 +36,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     file                  \
     zip                   \
     unzip                 \
+    rsync                 \
   && rm -rf /var/lib/apt/lists/*
 
 
@@ -57,6 +58,13 @@ RUN for name in SSSP_acc_PBE SSSP_acc_PBESOL SSSP_eff_PBE SSSP_eff_PBESOL; do  \
     chmod -R +r /opt/pseudos/
 # remove misplaced pseudo
 RUN rm -vf /opt/pseudos/SSSP_eff_PBE/Be_ONCV_PBE-1.0.upf
+
+## install rclone
+WORKDIR /opt/rclone
+RUN wget https://downloads.rclone.org/rclone-v1.38-linux-amd64.zip;  \
+    unzip rclone-v1.38-linux-amd64.zip;                              \
+    ln -s rclone-v1.38-linux-amd64/rclone .
+
 
 ## install PyPI packages for Pyhon 3
 RUN pip3 install --upgrade         \
