@@ -81,6 +81,7 @@ if [ ! -d /project/.aiida ]; then
 
 else
    verdi daemon stop || true
+   echo "yes" | python /usr/local/lib/python2.7/dist-packages/aiida/backends/djsite/manage.py --aiida-profile=default migrate
    verdi daemon start
 fi
 
