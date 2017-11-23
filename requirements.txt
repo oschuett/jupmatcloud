@@ -5,6 +5,7 @@
 # notebook
 # aiida
 # aiida-cp2k
+# aiida-quantumespresso
 # ase
 # seekpath
 # ipywidgets
