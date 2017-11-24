@@ -108,9 +108,7 @@ RUN git clone https://github.com/oschuett/molview-ipywidget.git  && \
     jupyter nbextension     install --sys-prefix --py --symlink molview_ipywidget  && \
     jupyter nbextension     enable  --sys-prefix --py           molview_ipywidget
 
-# patch AiiDA
-COPY job_process.py.patch /opt/
-RUN patch  -R /usr/local/lib/python2.7/dist-packages/aiida/work/legacy/job_process.py job_process.py.patch
+# create symlink for legacy workflows
 RUN cd /usr/local/lib/python2.7/dist-packages/aiida/workflows; rm -rf user; ln -s /project/workflows user
 
 # populate reentry cache
@@ -122,6 +120,7 @@ RUN reentry scan
 RUN echo "btl_base_warn_component_unused = 0" >> /etc/openmpi/openmpi-mca-params.conf
 
 # install Tini
+# TODO: might not be needed in the future, Docker now has an init build-in
 WORKDIR /opt
 RUN wget https://github.com/krallin/tini/releases/download/v0.15.0/tini && \
     chmod +x /opt/tini

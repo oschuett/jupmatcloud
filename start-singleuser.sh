@@ -74,10 +74,12 @@ if [ ! -d /project/.aiida ]; then
    verdi daemon start
 
    # setup pseudopotentials
-   cd /opt/pseudos
-   for i in *; do
-      verdi data upf uploadfamily $i $i $i
-   done
+   if [ ! -e /project/SKIP_IMPORT_PSEUDOS ]; then
+      cd /opt/pseudos
+      for i in *; do
+         verdi data upf uploadfamily $i $i $i
+      done
+   fi
 
 else
    verdi daemon stop || true
